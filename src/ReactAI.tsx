@@ -1,6 +1,10 @@
+import { RouterProvider } from "react-router"
+import { router } from "./presentation/router/router"
 
 export const ReactAI = () => {
   return (
-    <div className="text-red-500">ReactAI</div>
+  
+    <RouterProvider router={ router } />
+
   )
 }
