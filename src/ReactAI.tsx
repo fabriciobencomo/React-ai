@@ -1,6 +1,6 @@
 
 export const ReactAI = () => {
   return (
-    <div>ReactAI</div>
+    <div className="text-red-500">ReactAI</div>
   )
 }
