@@ -3,6 +3,8 @@ import { AiMessages } from "../../components/chat-bubbles/AiMessages"
 import { MyMessage } from "../../components/chat-bubbles/MyMessage"
 import { TextMessageBox } from "../../components/chat-input-box/TextMessageBox"
 import { TypingLoader } from "../../components/loaders/TypingLoader"
+import { TextMessageBoxFile } from "../../components/chat-input-box/TextMessageBoxFile"
+import { TextMessageBoxSelect } from "../../components/chat-input-box/TextMessageBoxSelect"
 
 interface Message {
   text: string;
