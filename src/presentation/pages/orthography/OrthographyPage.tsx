@@ -3,12 +3,17 @@ import { AiMessages } from "../../components/chat-bubbles/AiMessages"
 import { MyMessage } from "../../components/chat-bubbles/MyMessage"
 import { TextMessageBox } from "../../components/chat-input-box/TextMessageBox"
 import { TypingLoader } from "../../components/loaders/TypingLoader"
-import { TextMessageBoxFile } from "../../components/chat-input-box/TextMessageBoxFile"
-import { TextMessageBoxSelect } from "../../components/chat-input-box/TextMessageBoxSelect"
+import {AiOrthographyMessages} from '../../components/chat-bubbles/AiOrthographyMessages'
+import { orthographyUseCase } from "../../../core/use-cases/orthography.use-case"
 
 interface Message {
   text: string;
   isGpt: boolean;
+  info?: {
+    userScore: number;
+    errors: string[];
+    message: string;
+  }
 }
 
 
@@ -22,6 +27,21 @@ export const OrthographyPage = () => {
     setIsloading(true);
     setMessages((prev) => [...prev, {text: text, isGpt: false}]);
     
+    const {errors, message, userScore, ok} = await orthographyUseCase(text);
+
+
+    if(!ok) {
+      setMessages((prev) =>  [...prev, {text: 'No se pudo realizar la corrección', isGpt: true}])
+    }else {
+      setMessages((prev) => [...prev, {
+        text: message,
+        isGpt: true,
+        info: {errors, message,  userScore}
+      }])
+    }
+
+
+
     setIsloading(false);
 
   }
@@ -38,7 +58,7 @@ export const OrthographyPage = () => {
               message.isGpt 
               ?
               (
-                <AiMessages text="Esto es del AI" key={index}/>
+                <AiOrthographyMessages text={message} key={index}/>
               )
               :
               (
@@ -55,11 +75,7 @@ export const OrthographyPage = () => {
             )
 
           }
-          <MyMessage text="Hola Mundo"/>
 
-          <div>
-            <TypingLoader  className="fade-in"/>
-          </div>
         </div>
 
 
