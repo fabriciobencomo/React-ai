@@ -3,7 +3,7 @@ import { AiMessages } from "../../components/chat-bubbles/AiMessages";
 import { MyMessage } from "../../components/chat-bubbles/MyMessage";
 import { TextMessageBox } from "../../components/chat-input-box/TextMessageBox";
 import { TypingLoader } from "../../components/loaders/TypingLoader";
-import { prosConsDiscusserStreamUseCase } from "../../../core/use-cases";
+import { prosConsDiscusserStreamGeneratorUseCase } from "../../../core/use-cases";
 
 
 interface Message {
@@ -22,9 +22,18 @@ export const ProsConsStreamPage = () => {
     setIsloading(true);
     setMessages((prev) => [...prev, {text: text, isGpt: false}]);
 
-    await prosConsDiscusserStreamUseCase(text);
-    
+    const stream = await prosConsDiscusserStreamGeneratorUseCase(text);
     setIsloading(false);
+    setMessages((messages) => [...messages, {text: '', isGpt: true}])
+
+    for await(const text of stream) {
+      setMessages((messages) => {
+        const newMessages = [...messages]
+        newMessages[newMessages.length - 1].text = text
+        return newMessages
+      })
+    }
+    
 
   }
 
@@ -39,7 +48,7 @@ export const ProsConsStreamPage = () => {
               message.isGpt 
               ?
               (
-                <AiMessages text="Esto es del AI" key={index}/>
+                <AiMessages text={message.text} key={index}/>
               )
               :
               (
@@ -65,4 +74,3 @@ export const ProsConsStreamPage = () => {
     </div>
   )
 }
-
