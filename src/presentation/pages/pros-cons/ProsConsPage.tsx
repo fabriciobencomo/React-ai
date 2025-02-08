@@ -31,8 +31,6 @@ export const ProsConsPage = () => {
           isGpt: true,
         }])
       }
-
-      console.log(content)
       
       setIsloading(false);
   

@@ -6,6 +6,7 @@ interface Props {
 }
 
 export const AiOrthographyMessages = ({userScore, errors, message}: Props) => {
+
   return (
     <div className="col-start-1 col-end-9 p-3 rounded-lg">
       <div className="flex flex-row items-start">

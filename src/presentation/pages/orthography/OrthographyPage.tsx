@@ -27,8 +27,7 @@ export const OrthographyPage = () => {
     setIsloading(true);
     setMessages((prev) => [...prev, {text: text, isGpt: false}]);
     
-    const {errors, message, userScore, ok} = await orthographyUseCase(text);
-
+    const {ok, message, userScore, errors} = await orthographyUseCase(text);
 
     if(!ok) {
       setMessages((prev) =>  [...prev, {text: 'No se pudo realizar la corrección', isGpt: true}])
@@ -39,8 +38,6 @@ export const OrthographyPage = () => {
         info: {errors, message,  userScore}
       }])
     }
-
-
 
     setIsloading(false);
 
@@ -58,7 +55,7 @@ export const OrthographyPage = () => {
               message.isGpt 
               ?
               (
-                <AiOrthographyMessages text={message} key={index}/>
+                <AiOrthographyMessages {...message.info!} key={index}/>
               )
               :
               (
