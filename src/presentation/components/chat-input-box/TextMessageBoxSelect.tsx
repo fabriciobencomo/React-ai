@@ -1,7 +1,7 @@
 import { FormEvent, useState } from "react";
 
 interface Props {
-  onSendMessage: (message:string) => void;
+  onSendMessage: (message:string, selectedOption: string) => void;
   placeholder?: string;
   disableCorrections?: boolean;
   options: Option[];
@@ -18,9 +18,15 @@ export const TextMessageBoxSelect = ({ onSendMessage, placeholder, disableCorrec
   const [selectedOption, setSelectedOption] = useState<string>('')
   
   const handleSendMessage = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
 
-    onSendMessage(message)
+    event.preventDefault(); 
+
+    if(message.trim().length == 0) return
+    if(selectedOption === '') return
+
+    console.log('hola')
+
+    onSendMessage(message,selectedOption)
     setMessage('')
   }
 
@@ -39,7 +45,7 @@ export const TextMessageBoxSelect = ({ onSendMessage, placeholder, disableCorrec
             onChange={(e) => setMessage(e.target.value)}
           />
           <select name="select" className="w-2/5 ml-5 border rounded-xl text-gray-800 focus:outline-none focus:border-indigo-300 pl-4 h-10" value={selectedOption} onChange={e => setSelectedOption(e.target.value)} >
-            <option>Seleccione</option>
+            <option value='frances'>Seleccione</option>
             {
               options.map(({id,text}) => (
                 <option value={id} key={id}>{text}</option>
