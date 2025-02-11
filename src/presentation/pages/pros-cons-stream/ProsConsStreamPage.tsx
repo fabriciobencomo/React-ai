@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useRef, useState } from "react"
 import { AiMessages } from "../../components/chat-bubbles/AiMessages";
 import { MyMessage } from "../../components/chat-bubbles/MyMessage";
 import { TextMessageBox } from "../../components/chat-input-box/TextMessageBox";
@@ -14,18 +14,29 @@ interface Message {
 
 export const ProsConsStreamPage = () => {
 
+  const abortController = useRef(new AbortController())
+  const isRunning = useRef(false)
+
   const [isLoading, setIsloading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([])
 
   
   const handlePost = async(text: string) => {
+
+
+    if(isRunning.current) {
+      abortController.current.abort();
+      abortController.current = new AbortController();
+    }
+
     setIsloading(true);
     setMessages((prev) => [...prev, {text: text, isGpt: false}]);
-
-    const stream = await prosConsDiscusserStreamGeneratorUseCase(text);
+    isRunning.current = true
+    
+    const stream = prosConsDiscusserStreamGeneratorUseCase(text, abortController.current.signal);
     setIsloading(false);
     setMessages((messages) => [...messages, {text: '', isGpt: true}])
-
+    
     for await(const text of stream) {
       setMessages((messages) => {
         const newMessages = [...messages]
@@ -34,6 +45,7 @@ export const ProsConsStreamPage = () => {
       })
     }
     
+    isRunning.current = false
 
   }
 

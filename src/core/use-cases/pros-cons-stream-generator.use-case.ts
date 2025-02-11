@@ -1,13 +1,14 @@
 
-export async function* prosConsDiscusserStreamGeneratorUseCase(prompt: string) {
+export async function* prosConsDiscusserStreamGeneratorUseCase(prompt: string, abortSignal: AbortSignal) {
   try {
     const response = await fetch(`http://localhost:3000/gpt/pros-cons-discusser-stream`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({prompt})
+      body: JSON.stringify({prompt}),
       //todo: abortSignal
+      signal: abortSignal
     })
 
     if(!response.ok) throw new Error('No se pudo realizar la corrección')

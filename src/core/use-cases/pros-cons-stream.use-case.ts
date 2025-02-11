@@ -1,13 +1,13 @@
 
-export const prosConsDiscusserStreamUseCase = async(prompt: string) => {
+export const prosConsDiscusserStreamUseCase = async(prompt: string, abortSignal: AbortSignal) => {
   try {
     const response = await fetch(`http://localhost:3000/gpt/pros-cons-discusser-stream`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({prompt})
-      //todo: abortSignal
+      body: JSON.stringify({prompt}),
+      signal: abortSignal
     })
 
     if(!response.ok) throw new Error('No se pudo realizar la corrección')
@@ -15,31 +15,7 @@ export const prosConsDiscusserStreamUseCase = async(prompt: string) => {
     const reader = response.body?.getReader();
 
     return reader
-    // if(!reader) {
-    //   console.log('no se pudo generar el reader')
-    //   return null
-    // }
-
-    // const decoder = new TextDecoder();
     
-    // let text = ''
-
-    // while(true) {
-    //   const {value, done} = await reader.read();
-    //   if(done) {
-    //     break;
-    //   }
-    //   const decodeChunk = decoder.decode(value, {stream: true});
-    //   text += decodeChunk;
-    //   console.log(text)
-    // }
-
-
-
-    return {
-      ok: true,
-      content
-    }
 
   } catch(error) {
     return {
